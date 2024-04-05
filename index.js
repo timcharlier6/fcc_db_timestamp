@@ -26,11 +26,11 @@ app.get("/api/hello", function (req, res) {
 
 // Route for /api/:date
 app.get('/api/:date?', (req, res) => {
-    const timestamp = req.params.date;
+    const timestamp = req.params.date || new Date();
 
     if (!isNaN(Number(timestamp)) && timestamp.length === 13) {
         return res.json({
-            unix: timestamp,
+            unix: parseInt(timestamp),
             utc: new Date(Number(timestamp)).toUTCString()
         });
     }
@@ -38,7 +38,7 @@ app.get('/api/:date?', (req, res) => {
     if (new Date(timestamp).toUTCString() !== "Invalid Date") {
         return res.json({
             unix: new Date(timestamp).getTime(),
-            utc: timestamp,
+            utc: new Date(timestamp).toUTCString()
         })
     };
 
