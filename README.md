@@ -31,4 +31,4 @@ app.get('/api/:date?', (req, res) => {
   // Send JSON response
   res.json(response);
 });
-```
+```aoeu
