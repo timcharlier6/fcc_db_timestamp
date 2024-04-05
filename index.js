@@ -24,24 +24,33 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-// Define route for /api/:date
-app.get('/api/:date', (req, res) => {
-  // Parse the date parameter from the url
-  const dateString = req.params.date;
+// Route for /api/:date
+app.get('/api/:date?', (req, res) => {
+  let dateParam = req.params.date;
+  
+  // Check if dateParam is empty or undefined
+  if (!dateParam) {
+    dateParam = new Date();
+  } else {
+    // Attempt to parse the date parameter
+    const date = new Date(dateParam);
 
-  // Parse the date
-  const date = new Date(dateString);
+    // Check if the date is valid
+    if (isNaN(date)) {
+      return res.json({ error: "Invalid Date" });
+    }
 
-  // Check if the date is valid
-  if (isNaN(date)) {
-    return res.status(400).json({ error: 'Invalid date format' });
+    dateParam = date;
   }
 
-  // Convert the date to Unix timestamp in milliseconds
-  const unixTimestampMillis = date.getTime();
+  // Create JSON object with Unix timestamp and UTC string
+  const response = {
+    unix: dateParam.getTime(),
+    utc: dateParam.toUTCString()
+  };
 
-  // Return JSON object with the Unix timestamp
-  res.json({ unix: unixTimestampMillis });
+  // Send JSON response
+  res.json(response);
 });
 
 // Listen on port set in environment variable or default to 3000
